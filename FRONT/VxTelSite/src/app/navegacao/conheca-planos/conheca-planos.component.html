@@ -1,0 +1,31 @@
+<header class="py-2 mb-2" style="background-color: white; margin-top: 50px;">
+	<div class="container h-80">
+		<div class="row h-80 align-items-center">
+			<div class="col-lg-2 pt-2">
+				<img src="https://s3.amazonaws.com/sample-login/companies/avatars/000/003/714/original/logo_vortx.jpg?1539802031"
+					width="100px" height="100px" />
+			</div>
+			<div class="col-lg-10">
+				<h1 class="display-5 text-black-50 mt-2 mb-2">VxTel - Seus minutos com muito mais economia</h1>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="container main-container table-responsive">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>DDD Origem</th>
+				<th>DDD Destino</th>
+				<th>Valor Minuto</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let tabelacaoPreco of tabelacaoPrecos">
+				<td>{{ tabelacaoPreco.origem }}</td>
+				<td>{{ tabelacaoPreco.destino }}</td>
+				<td>{{ tabelacaoPreco.custoMin | currencyBrazil }}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

@@ -1,0 +1,110 @@
+<header class="py-2 mb-2" style="background-color: white; margin-top: 50px;">
+	<div class="container h-80">
+		<div class="row h-80 align-items-center">
+			<div class="col-lg-2 pt-2">
+				<img src="https://s3.amazonaws.com/sample-login/companies/avatars/000/003/714/original/logo_vortx.jpg?1539802031"
+					width="100px" height="100px" />
+			</div>
+			<div class="col-lg-10">
+				<h1 class="display-5 text-black-50 mt-2 mb-2">VxTel - Seus minutos com muito mais economia</h1>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="row">
+	<div class="container main-container table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th class="text-center">Plano</th>
+					<th class="text-center">DDD Origem</th>
+					<th class="text-center">DDD Destino</th>
+					<th class="text-center">Valor Minuto</th>
+					<th class="text-center">Minutos Plano</th>
+					<th class="text-center">Tempo Gasto</th>
+					<th class="text-center">Valor com Plano</th>
+					<th class="text-center">Valor sem Plano</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let tabelacaoPreco of tabelacaoPrecos; let i = index">
+					<td *ngIf="i < tabelacaoPrecos.length && i <  planos.length" class="text-center">{{ planos[i].nomePlano }}</td>
+					<td *ngIf="i < tabelacaoPrecos.length && i <  planos.length" class="text-center">{{ tabelacaoPreco.origem }}</td>
+					<td *ngIf="i < tabelacaoPrecos.length && i <  planos.length" class="text-center">{{ tabelacaoPreco.destino }}</td>
+					<td *ngIf="i < tabelacaoPrecos.length && i <  planos.length" class="text-center">{{ tabelacaoPreco.custoMin | currencyBrazil }}</td>
+					<td *ngIf="i < tabelacaoPrecos.length && i <  planos.length" class="text-center">{{ planos[i].minutosPlano }}</td>
+					<td *ngIf="i < tabelacaoPrecos.length && i <  planos.length" class="text-center">{{ planos[i].minutosPlano + tempoGasto }}</td>
+					<td *ngIf="i < tabelacaoPrecos.length && i <  planos.length" class="text-center">{{ CalcularPrecosComPlano(tempoGasto, tabelacaoPreco.custoMin) }}</td>
+					<td *ngIf="i < tabelacaoPrecos.length && i <  planos.length" class="text-center">{{ CalcularPrecosSemPlano((planos[i].minutosPlano + tempoGasto) , tabelacaoPreco.custoMin)  }}</td>
+				</tr>
+			</tbody>
+		</table>
+		<button class="btn btn-primary" href="javascript:void(0)" (click)="abrirModal(content)">Faça uma Simulação</button>
+	</div>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Simular Plano</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+    </div>
+
+        <div class="modal-body">
+            
+            <div>
+				<div class="row">
+					<div class="col-md-6">
+						<label class="control-label">DDD Origem:</label>
+						<div>
+							<select [(ngModel)]="selectedOrigem" id="Origem" style="width: 150px;">
+								<option *ngFor="let dddorigem of tabelacaoPrecos " [value]=" dddorigem.origem ">{{ dddorigem.origem }}</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<label class="control-label">DDD Destino:</label>
+						<div>
+							<select [(ngModel)]="selectedDestino" id="Destino" style="width: 150px;">
+								<option *ngFor="let dddDestino of tabelacaoPrecos" [value]="dddDestino.destino">{{ dddDestino.destino }}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6 mt-3">
+						<label class="control-label">Selecione o plano:</label>
+						<div>
+							<select [(ngModel)]="minutosPlano" id="Plano" style="width: 150px;">
+								<option *ngFor="let plano of planos " [value]=" plano.minutosPlano ">{{ plano.nomePlano }}</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-6 mt-3">
+						<label class="control-label">Minutos Desejados:</label>
+						<div>
+							<input [(ngModel)]="minutosDesejados" type="text" id="txtMinutosDesejados" name="txtMinutosDesejados" style="width: 150px;">
+						</div>
+					</div>
+				</div>
+            </div>
+        </div>
+
+		<div class="alert alert-danger" *ngIf="precoCalculado.precoCalculadoPlano == 0 && precoCalculado.precoCalculadoSemPlano == 0">
+			<h4 id="msgRetorno" >Opa! Alguma coisa não deu certo:</h4>
+			<ul>
+				<li>{{ precoCalculado.message }}</li>
+			</ul>
+		</div>
+
+		<div class="alert alert-success" *ngIf="precoCalculado.precoCalculadoPlano > 0 || precoCalculado.precoCalculadoSemPlano > 0">
+			<h5 id="msgRetorno">Com nosso plano: {{ precoCalculado.precoCalculadoPlano | currencyBrazil }}</h5>
+			<h5 id="msgRetorno2">Sem o nosso plano: {{ precoCalculado.precoCalculadoSemPlano | currencyBrazil }}</h5>
+		</div>
+
+        <div class="modal-footer">
+            <input type="submit" value="Simular" class="btn btn-primary" (click)="RealizarSimulacao()">
+        </div>
+
+</ng-template>
